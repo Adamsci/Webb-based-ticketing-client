@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tickets</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <ul>
+        <a href="./index"><li><b>Home</b></li></a>
+        <a href="./about"><li><b>About</b></li></a>
+        <a href="./tickets"><li><b><i>Tickets</i></b></li></a>
+        <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+    </ul>
+    <main>
+        <h1>Tickets</h1>
+        <section>
+            <pre><%#= JSON.stringify(res, null, 4) %></pre>
+
+            <table class="ticket-table">
+                <tr class="top-tr">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Created</th>
+                    <th>Agent</th>
+                    <th>Department</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+                <% for (const row of res) { %>
+                    <tr>
+                        <td><%= row.title %></td>
+                        <td><%= row.category %></td>
+                        <td><%= row.skapad_datum %></td>
+                        <td><%= row.agent %></td>
+                        <td><%= row.department %></td>
+                        <td><%= row.progress %></td>
+                        <td><%= row.status %></td>
+                        <td><a href="./ticket-view/<%= row.id %>">Details</a></td>
+                    </tr>
+                <% }; %>
+            </table>
+          </section>
+    </main>
+    <footer><section>Your text here</section></footer>
+</body>
+</html>

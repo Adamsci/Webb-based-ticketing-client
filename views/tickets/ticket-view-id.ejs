@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tickets</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <ul>
+        <a href="../index"><li><b>Home</b></li></a>
+        <a href="../about"><li><b>About</b></li></a>
+        <a href="../tickets"><li><b><i>Tickets</i></b></li></a>
+        <a href="../knowledge-base"><li><b>Knowledge Base</b></li></a>
+    </ul>
+    <main>
+        <% for (const row of res) { %>
+        <h1>Ticket <%= row.id %></h1>
+        <section>
+            <pre><%#= JSON.stringify(res, null, 4) %></pre>
+
+            <table class="ticket-table-one">
+                <tr>
+                    <th>User</th>
+                    <td><%= row.username %>, <%= row.name %></td>
+                </tr>
+                <tr class="top-tr">
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td><%= row.title %></td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td><%= row.category %></td>
+                </tr>
+                <tr>
+                    <th>Created</th>
+                    <td><%= row.skapad_datum %></td>
+                </tr>
+                <tr>
+                    <th>Agent</th>
+                    <td><%= row.agent_name %>, <%= row.agent_department %></td>
+                </tr>
+                <tr>
+                    <th>Progress</th>
+                    <td><%= row.comment %></td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td><%= row.status %></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td><%= row.description %></td>
+                </tr>
+                <tr>
+                    <th>File</th>
+                    <td>
+                        <% if (row.file_data) { %>
+                            <a href="/download/<%= row.id %>"><%= row.file_name %>.<%= row.file_extension %></a>
+                        <% } else { %>
+                            No File Attached
+                        <% } %>
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <% }; %>
+    </main>
+    <footer><section>Your text here</section></footer>
+</body>
+</html>

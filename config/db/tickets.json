@@ -1,0 +1,7 @@
+{
+    "host":     "AdamsDator.local",
+    "user":     "dbadm",
+    "password": "P@ssw0rd",
+    "database": "tickets",
+    "multipleStatements": true
+}

@@ -1,0 +1,5 @@
+"title","description","status","user_id","category_name"
+"Problem with installation","I have a problem when going to the installation page. Nothing happens when I click install.","Open","31","Installation"
+"Can't see xyz","When going into x page I don't see y.","Open","61","Program Issue"
+"How to add xyz","Hi. How do I add x to y?","Open","56","Question"
+"Program won't start","When starting the program i get a dialog box that says 'Missing x'. I have tried to reinstall but nothing seems to work.","Closed","19","Program Issue"
