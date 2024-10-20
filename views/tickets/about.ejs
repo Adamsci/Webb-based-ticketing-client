@@ -3,19 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Tickets</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <ul>
-        <a href="#"><li><i><b>Home</b></i></li></a>
-        <a href="./about"><li><b>About</b></li></a>
-        <a href="./tickets"><li><b>Tickets</b></li></a>
-        <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
-    </ul>
+    <nav>
+        <ul class="page-field">
+            <a href="./"><li><b>Home</b></li></a>
+            <a href="./about"><li><b>About</b></li></a>
+            <a href="./tickets"><li><b>Tickets</b></li></a>
+            <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+            <% if (email[0].is_agent == 1) { %>
+                <a href="./config"><li><b>Config</b></li></a>
+            <% } %>
+        </ul>
+        <ul class="login-field">
+            <li>
+              <button id="btn-login" disabled="true" onclick="login()">Log in</button>
+            </li>
+            <li>
+              <button id="btn-logout" disabled="true" onclick="logout()">Log out</button>
+            </li>
+            <li>
+                <p id="ipt-user-email"></p>
+            </li>
+        </ul>
+    </nav>
     <main>
         <h1>About</h1>
         <p></p>
     </main>
+    <div class="hidden-api">
+        <button id="btn-call-api" disabled="true" onclick="callApi()">Call Api</button>
+
+        <!-- Add a container to hold the response from the call -->
+        <pre id="api-call-result"></pre>
+        <div class="hidden" id="gated-content">
+        <p>
+            You're seeing this content because you're currently
+            <strong>logged in</strong>.
+        </p>
+        <label>
+            Access token:
+            <pre id="ipt-access-token"></pre>
+        </label>
+        <label>
+            User profile:
+            <pre id="ipt-user-profile"></pre>
+        </label>
+        </div>
+    </div>
     <footer><section>Your text here</section></footer>
+
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <script src="/js/app.js"></script>
 </body>
 </html>

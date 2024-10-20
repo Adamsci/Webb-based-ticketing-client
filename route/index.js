@@ -9,49 +9,70 @@ const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const tables = require("../src/tables");
 const tb = new tables();
+const apiConnect = require("../src/apiConnect");
+const ac = new apiConnect();
 const mysql = require("promise-mysql");
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+//const { updateUserJSON } = require('../public/js/app');
+//import { updateUserJSON } from '../public/js/app.js';
 
 const config = require("../config/db/tickets.json");
 
 // Add a route for the path /
-router.get('/', (req, res) => {
-    res.redirect(`./tickets/index`);
-});
-
-router.get("/tickets/index", (req, res) => {
-    let data = {};
-
-    res.render("tickets/index", data);
-});
-
-router.get("/tickets/about", async (req, res) => {
-    let data = {};
-
-    res.render("tickets/about", data);
-});
-
-router.get("/tickets/tickets", async (req, res) => {
-    let data = {};
-
-    res.render("tickets/tickets", data);
-});
-
-router.get("/tickets/ticket-create/", async (req, res) => {
+router.get('/', async (req, res) => {
     let data = {};
     let db;
 
     db = await mysql.createConnection(config);
+    data.email = await tb.getFromDB(db, 'session', 0);
+
+    res.render("tickets/index", data);
+});
+
+// router.post("/", urlencodedParser, async (req, res) => {
+//     //console.log(JSON.stringify(req.body, null, 4));
+//     let data = {};
+//     let db;
+
+//     db = await mysql.createConnection(config);
+
+//     console.info('log');
+//     console.info(req.body.userinput);
+
+//     data.res = await tb.updateSession(db, req.body.userinput);
+
+//     console.info("posted " + req.body.userinput);
+
+//     res.redirect(`./`);
+// });
+
+router.get("/about", async (req, res) => {
+    let data = {};
+    let db;
+
+    db = await mysql.createConnection(config);
+    data.email = await tb.getFromDB(db, 'session', 0);
+
+    res.render("tickets/about", data);
+});
+
+router.get("/ticket-create/", async (req, res) => {
+    let data = {};
+    let db;
+
+    db = await mysql.createConnection(config);
+    data.email = await tb.getFromDB(db, 'session', 0);
 
     data.res = await tb.getFromDB(db, 'categories', 0);
 
     res.render("tickets/ticket-create", data);
 });
 
-router.post("/tickets/ticket-create/", upload.single('file'), urlencodedParser, async (req, res) => {
+router.post("/ticket-create/", upload.single('file'), urlencodedParser, async (req, res) => {
     //console.log(JSON.stringify(req.body, null, 4));
+    let data = {};
     let db;
 
     db = await mysql.createConnection(config);
@@ -59,32 +80,119 @@ router.post("/tickets/ticket-create/", upload.single('file'), urlencodedParser, 
     let fileBuffer = req.file ? req.file.buffer : null;
     let fileName = req.file ? req.file.originalname : null; // Get original file name
 
-    await tb.createTicket(db, req.body.title, req.body.desc, req.body.category, fileBuffer, fileName);
+    data.res = await tb.getFromDB(db, 'users', 0, req.body.userinput);
 
-    res.redirect(`../tickets/tickets`);
+    console.info("data.res");
+    console.info(data.res);
+    console.info(data.res[0]);
+    console.info(data.res[0].id);
+
+    await tb.createTicket(db, data.res[0].id, req.body.title, req.body.desc, req.body.category, fileBuffer, fileName);
+
+    res.redirect(`../tickets`);
 });
 
-router.get("/tickets/ticket-view", async (req, res) => {
+router.get("/category-create/", async (req, res) => {
+    let data = {};
+    let db;
+
+    db = await mysql.createConnection(config);
+    data.email = await tb.getFromDB(db, 'session', 0);
+
+    res.render("tickets/category-create", data);
+});
+
+router.post("/category-create/", urlencodedParser, async (req, res) => {
+    //console.log(JSON.stringify(req.body, null, 4));
+    let data = {};
+    let db;
+
+    db = await mysql.createConnection(config);
+
+    await tb.createCategory(db, req.body.category);
+
+    res.redirect(`../tickets`);
+});
+
+router.get("/tickets", async (req, res) => {
     let db;
     let data = {};
 
     db = await mysql.createConnection(config);
 
     data.res = await tb.getFromDB(db, 'ticket-info', 0);
+    data.res2 = await tb.getFromDB(db, 'ticket-info', 0);
 
-    res.render("tickets/ticket-view", data);
+    data.email = await tb.getFromDB(db, 'session', 0);
+
+    console.info(data.email);
+
+    res.render("tickets/tickets", data);
 });
 
-router.get("/tickets/ticket-view/:id", async (req, res) => {
+router.post("/tickets/", urlencodedParser, async (req, res) => {
+    //console.log(JSON.stringify(req.body, null, 4));
+    let data = {};
+    let db;
+
+    db = await mysql.createConnection(config);
+
+    data.res = await tb.updateSession(db, req.body.userinput);
+
+    console.info("posted " + req.body.userinput);
+
+    res.redirect(`./tickets`);
+});
+
+router.get("/ticket-view/:id", async (req, res) => {
+    let id = req.params.id;
+    let db;
+    let data = {};
+
+    db = await mysql.createConnection(config);
+    data.email = await tb.getFromDB(db, 'session', 0);
+
+    data.res = await tb.getFromDB(db, 'ticket-info-one', id);
+    data.res2 = await tb.getFromDB(db, 'comments', id);
+    data.session = await tb.getFromDB(db, 'session', 0, '');
+
+    // console.info(data.res[0].status);
+
+    res.render("tickets/ticket-view-id", data);
+});
+
+router.post("/ticket-view/:id", urlencodedParser, async (req, res) => {
     let id = req.params.id;
     let db;
     let data = {};
 
     db = await mysql.createConnection(config);
 
-    data.res = await tb.getFromDB(db, 'ticket-info-one', id);
+    data.rest = await tb.getFromDB(db, 'ticket-info-one', id);
 
-    res.render("tickets/ticket-view-id", data);
+    data.res = await tb.getFromDB(db, 'users', 0, req.body.userinput);
+
+    data.session = await tb.getFromDB(db, 'session', 0, '');
+
+    if (req.body.s_status != null) {
+        await tb.changeTicket(db, id, req.body.s_status);
+    } else if (req.body.desc) {
+        await tb.makeComment(db, id, data.res[0].id, req.body.title, req.body.desc);
+    }
+
+    // console.info(data.session[0]);
+    // console.info(data.rest[0].agent_email);
+    // console.info(data.session[0].is_agent);
+    console.info(data.rest[0].user_email);
+    console.info(data.rest[0]);
+    if (data.rest[0].agent_email == null && data.session[0].is_agent == 1) {
+        await tb.claimTicket(db, id, req.body.userinput);
+    } else if (data.rest[0].agent_email != null && (data.session[0].role == 'admin' ||
+            data.session[0].user_email == data.rest[0].agent_email)) {
+        await tb.unclaimTicket(db, id);
+    }
+
+    res.redirect(`./` + id);
 });
 
 router.get('/download/:id', async (req, res) => {
@@ -107,6 +215,41 @@ router.get('/download/:id', async (req, res) => {
     } else {
         res.status(404).send('File not found');
     }
+});
+
+router.get('/knowledge-base', async (req, res) => {
+    let data = {};
+    let db;
+
+    db = await mysql.createConnection(config);
+    data.email = await tb.getFromDB(db, 'session', 0);
+
+    res.render("tickets/knowledge-base", data);
+});
+
+router.get("/config/", async (req, res) => {
+    let data = {};
+    let db;
+
+    db = await mysql.createConnection(config);
+    data.email = await tb.getFromDB(db, 'session', 0);
+
+    data.res = await tb.getFromDB(db, 'all-users', 0);
+
+    res.render("tickets/config", data);
+});
+
+router.post("/config/", urlencodedParser, async (req, res) => {
+    let db;
+    let data = {};
+
+    db = await mysql.createConnection(config);
+
+    if (req.body.role != null) {
+        await tb.changeRole(db, req.body.userinput, req.body.role);
+    }
+
+    res.redirect(`./config`);
 });
 
 module.exports = router;

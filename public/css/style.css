@@ -1,0 +1,203 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Arial", sans-serif;
+}
+
+nav {
+    background-color: #1B2045;
+    display: flex;
+    justify-content: space-evenly;
+    box-shadow: 0px 5px 5px grey;
+}
+
+li {
+    text-align: center;
+    display: inline-block;
+    padding: 20px 20px;
+}
+
+ul a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 20px 20px;
+}
+
+ul a:hover {
+    background-color: #4c5384;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+}
+
+.login-field {
+    border: 1px solid white;
+    color: white;
+    margin-left: auto;
+}
+
+.page-field {
+    margin-left: 20px;
+}
+
+main {
+    margin: 30px;
+}
+
+.ticket-table {
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ticket-table td, th {
+    border: 1px solid black;
+    text-align: left;
+    padding: 8px;
+}
+
+.ticket-table-one {
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: fixed;
+}
+
+.ticket-table-one td, th {
+    border: 1px solid black;
+    text-align: left;
+    padding: 8px;
+}
+
+.ticket-table-one td {
+    word-wrap: break-word;
+}
+
+.top-tr {
+    height: 30px;
+}
+
+.top-tr th {
+    background-color: #1B2045;
+    border: 1px solid #1B2045;
+}
+
+.comment-table {
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: fixed;
+    border-radius: 30px;
+}
+
+.comment-table td, th {
+    border: 1px solid black;
+    text-align: left;
+    padding: 8px;
+}
+
+.comment-table td {
+    word-wrap: break-word;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    position: relative;
+}
+
+body::after {
+    content: '';
+    display: block;
+    height: 80px;
+}
+
+.ticket-link {
+    text-decoration: none;
+    color: black;
+}
+
+.ticket-button {
+    margin: 10px;
+    font-size: 20px;
+    border-radius: 3px;
+    border-style: solid;
+    border-color: black;
+    padding: 15px;
+}
+
+.ticket-button:hover {
+    margin: 10px;
+    font-size: 20px;
+    border-radius: 3px;
+    border-style: solid;
+    border-color: black;
+    padding: 15px;
+    background-color: #bebebe;
+}
+
+.ticket-view-form fieldset {
+    border: none;
+    height: auto;
+}
+
+.label-left fieldset {
+    padding: 10px;
+    margin: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+label {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.confirm-ticket-change {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 5px;
+    font-size: 17px;
+}
+
+.input-larger {
+    padding: 5px;
+    font-size: 17px;
+}
+
+.sorting {
+    padding: 5px;
+    font-size: 17px;
+    margin-left: 4rem;
+}
+
+.open-button {
+    background-color: green;
+}
+
+.closed-button {
+    background-color: red;
+}
+
+.hidden-api {
+    display: none;
+}
+
+footer > section {
+    margin: 35px 0px 0px 30px;
+}
+
+footer {
+    background-color: #333333;
+    color: white;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+    height: 80px;
+}

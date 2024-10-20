@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Config</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <ul class="page-field">
+      <a href="./"><li><b>Home</b></li></a>
+      <a href="./about"><li><b>About</b></li></a>
+      <a href="./tickets"><li><b>Tickets</b></li></a>
+      <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+      <% if (email[0].is_agent == 1) { %>
+          <a href="./config"><li><b>Config</b></li></a>
+      <% } %>
+    </ul>
+    <ul class="login-field">
+        <li>
+          <button id="btn-login" disabled="true" onclick="login()">Log in</button>
+        </li>
+        <li>
+          <button id="btn-logout" disabled="true" onclick="logout()">Log out</button>
+        </li>
+        <li>
+          <p id="ipt-user-email"></p>
+        </li>
+    </ul>
+  </nav>
+  <main>
+    <h1>Config</h1>
+
+    <section>
+        <pre><%#= JSON.stringify(res, null, 4) %></pre>
+
+        <table class="ticket-table">
+          <tr class="top-tr">
+              <th></th>
+              <th></th>
+          </tr>
+          <tr>
+              <th>User</th>
+              <th>Role</th>
+          </tr>
+          <% for (const row of res) { %>
+              <tr>
+                  <td><%= row.email %></td>
+                  <td>
+                    <form class="ticket-view-form" method="post" action="/config">
+                      <fieldset>
+                        <input style="display: none;" id="userinput" type="read" name="userinput" readonly value="<%= row.email %>">
+                        <% if (row.role == 'user') { %>
+                          <select name="role" id="role" class="input-larger">
+                            <option value="user" class="input-larger">user</option>
+                            <option value="agent" class="input-larger">agent</option>
+                          </select>
+                          <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
+                        <% } else if (row.role == 'agent') { %>
+                          <select name="role" id="role" class="input-larger">
+                            <option value="agent" class="input-larger">agent</option>
+                            <option value="user" class="input-larger">user</option>
+                          </select>
+                          <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
+                        <% } else if (row.role == 'admin') { %>
+                          <b>admin</b>
+                        <% } %>
+                      </fieldset>
+                    </form>
+                  </td>
+              </tr>
+          <% }; %>
+        </table>
+    </section>
+  </main>
+  <footer><section>Your text here</section></footer>
+
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

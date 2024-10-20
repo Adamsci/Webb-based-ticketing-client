@@ -1,5 +1,5 @@
 --
--- Reset eshop
+-- Reset database
 --
 source setup.sql;
 

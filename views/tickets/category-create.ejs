@@ -29,29 +29,14 @@
         </ul>
     </nav>
     <main>
-        <h1>Create Ticket</h1>
+        <h1>Create Category</h1>
         <section>
             <pre><%#= JSON.stringify(res, null, 4) %></pre>
 
-            <form class="label-left" method="post" action="/ticket-create" enctype="multipart/form-data">
+            <form class="label-left" method="post" action="/category-create">
                 <fieldset>
-                    <input style="display: none;" id="userinput" type="read" name="userinput" readonly value="">
-
-                    <label for="title">Title</label>
-                    <input id="title" type="text" name="title" value="" maxlength="45"><br><br>
-
-                    <label for="desc">Describe your problem</label><br>
-                    <textarea id="desc" name="desc" rows="5" maxlength="2000"></textarea><br><br>
-
-                    <label for="file">File</label>
-                    <input id="file" type="file" name="file" value="" class="input-larger"><br><br>
-
-                    <label for="category">Category</label>
-                    <select name="category" id="category" name="category" class="input-larger">
-                        <% for (const row of res) { %>
-                            <option value="<%= row.name %>" class="input-larger"><%= row.name %></option>
-                        <% }; %>
-                    </select><br><br><hr><br>
+                    <label for="name">name</label>
+                    <input id="category" type="text" name="category" value="" maxlength="40"><br><br>
 
                     <input type="submit" name="doit" value="Create" class="input-larger">
                 </fieldset>

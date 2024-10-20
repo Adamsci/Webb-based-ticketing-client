@@ -3,20 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <title>Tickets</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <ul>
-        <a href="./index"><li><b>Home</b></li></a>
-        <a href="./about"><li><b>About</b></li></a>
-        <a href="#"><li><b><i>Tickets</i></b></li></a>
-        <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
-    </ul>
+    <nav>
+        <ul class="page-field">
+            <a href="./"><li><b>Home</b></li></a>
+            <a href="./about"><li><b>About</b></li></a>
+            <a href="./tickets"><li><b>Tickets</b></li></a>
+            <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+            <% if (email[0].is_agent == 1) { %>
+                <a href="./config"><li><b>Config</b></li></a>
+            <% } %>
+        </ul>
+        <ul class="login-field">
+            <li>
+              <button id="btn-login" disabled="true" onclick="login()">Log in</button>
+            </li>
+            <li>
+              <button id="btn-logout" disabled="true" onclick="logout()">Log out</button>
+            </li>
+            <li>
+                <p id="ipt-user-email"></p>
+            </li>
+        </ul>
+    </nav>
     <main>
         <h1>Tickets</h1>
         <a href="./ticket-create" class="ticket-link"><div class="ticket-button">Create Ticket</div></a>
-        <a href="./ticket-view" class="ticket-link"><div class="ticket-button">View Tickets</div></a>
+        <% if (email[0].is_agent == 1) { %>
+            <a href="./category-create" class="ticket-link"><div class="ticket-button">Create Category</div></a>
+        <% } %>
+        <section>
+            <pre><%#= JSON.stringify(res, null, 4) %></pre>
+            <pre><%#= JSON.stringify(res2, null, 4) %></pre>
+
+            <div class="filter-sorting"></div>
+            <table class="ticket-table">
+                <tr class="top-tr">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Created</th>
+                    <th>Agent</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+                <% for (const row of res) { %>
+                    <% if (row.user_email == email[0].user_email || email[0].is_agent == 1) { %>
+                        <tr>
+                            <td><%= row.title %></td>
+                            <td><%= row.category %></td>
+                            <td><%= row.skapad_datum %></td>
+                            <td><%= row.agent_email %></td>
+                            <td><%= row.description %></td>
+                            <% if (row.status == 'Open') { %>
+                                <td class="open-button"><b>Open</b></td>
+                            <% } else if (row.status == 'Closed') { %>
+                                <td class="closed-button"><b>Closed</b></td>
+                            <% } %>
+                            <td><a href="./ticket-view/<%= row.id %>">Details</a></td>
+                        </tr>
+                    <% } %>
+                <% }; %>
+            </table>
+        </section>
+        <div class="hidden-api">
+            <button id="btn-call-api" disabled="true" onclick="callApi()">Call Api</button>
+
+            <!-- Add a container to hold the response from the call -->
+            <pre id="api-call-result"></pre>
+            <div class="hidden" id="gated-content">
+            <p>
+                You're seeing this content because you're currently
+                <strong>logged in</strong>.
+            </p>
+            <label>
+                Access token:
+                <pre id="ipt-access-token"></pre>
+            </label>
+            <label>
+                User profile:
+                <pre id="ipt-user-profile"></pre>
+            </label>
+            </div>
+        </div>
     </main>
+    <form style="display:none;" method="post" action="/tickets" name="usernameform">
+        <fieldset>
+            <input id="userinput" type="read" name="userinput" readonly value="">
+
+            <input type="submit" name="doit" value="Create">
+        </fieldset>
+    </form>
     <footer><section>Your text here</section></footer>
+
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <script src="/js/appTickets.js"></script>
 </body>
 </html>

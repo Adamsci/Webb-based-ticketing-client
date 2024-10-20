@@ -1,0 +1,5 @@
+"ticket_id","user_id","title","comment"
+"1","1","Clarify xyz","What did you mean by x? What does y have to do with x?"
+"1","31","clarification","x is and y is."
+"1","1","solved","Ran some tests and the problem is x."
+"2","1","Working on it","I am contacting x. To run some tests."
