@@ -9,39 +9,8 @@ const configureClient = async () => {
 
   auth0Client = await auth0.createAuth0Client({
     domain: config.domain,
-    clientId: config.clientId,
-    authorizationParams: {
-      audience: "http://ticket-client/api"   // NEW - add the audience value
-    }
+    clientId: config.clientId
   });
-};
-
-const callApi = async () => {
-  try {
-
-    // Get the access token from the Auth0 client
-    const token = await auth0Client.getTokenSilently();
-
-    // Make the call to the API, setting the token
-    // in the Authorization header
-    const response = await fetch("/api/external", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    // Fetch the JSON result
-    const responseData = await response.json();
-
-    // Display the result in the output element
-    const responseElement = document.getElementById("api-call-result");
-
-    responseElement.innerText = JSON.stringify(responseData, {}, 2);
-
-  } catch (e) {
-      // Display errors in the console
-      console.error(e);
-    }
 };
 
 window.onload = async () => {
@@ -82,7 +51,6 @@ const updateUI = async () => {
 
   document.getElementById("btn-logout").disabled = !isAuthenticated;
   document.getElementById("btn-login").disabled = isAuthenticated;
-  document.getElementById("btn-call-api").disabled = !isAuthenticated;
 
   // NEW - add logic to show/hide gated content after authentication
   if (isAuthenticated) {
@@ -103,7 +71,15 @@ const updateUI = async () => {
     document.getElementById("ipt-user-email").textContent = JSON.stringify(
       user.email
     );
-    document.getElementById("userinput").value = user.email;
+    if (user.email != null) {
+      try{
+        document.getElementById("agentinput").value = user.email; console.info("agentinput1");
+      } catch {}
+      document.getElementById("userinput").value = user.email; console.info("userinput1");
+    } else {
+      document.getElementById("userinput").value = "none"; console.info("userinput2");
+    }
+
     userEmail = user.email;
 
   } else {
@@ -122,6 +98,18 @@ const checkPost = async () => {
       console.info(localStorage.getItem("needsReload") + "Yes");
   }
 }
+
+const needsPost = async () => {
+  console.info("needsPost")
+  if (localStorage.getItem("needsReload") == null) {
+  localStorage.setItem("needsReload", "yes");
+  }
+  if (localStorage.getItem("needsReload") == "yes") {
+  return true;
+  } else {
+  return false;
+  }
+};
 
 const updateUserJSON = async () => {
     try {
@@ -149,19 +137,22 @@ const updateUserJSON = async () => {
   };
 
 const login = async () => {
-    console.info("Login");
-    await auth0Client.loginWithRedirect({
-        authorizationParams: {
-            redirect_uri: "http://localhost:3000"
-        }
-    });
+  console.info("Login");
+  await auth0Client.loginWithRedirect({
+      authorizationParams: {
+          redirect_uri: "http://localhost:3000"
+      }
+  });
 };
 
 const logout = async () => {
-    console.info("Log out");
-    auth0Client.logout({
-        logoutParams: {
-            returnTo: "http://localhost:3000"
-        }
-    });
+  console.info("Log out");
+  auth0Client.logout({
+      logoutParams: {
+          returnTo: "http://localhost:3000"
+      }
+  });
+  localStorage.setItem("needsReload", "yes");
 };
+
+

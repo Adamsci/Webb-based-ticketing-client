@@ -189,6 +189,11 @@ label {
     display: none;
 }
 
+#articletext {
+    width: 70%;
+    word-wrap: break-word;
+}
+
 footer > section {
     margin: 35px 0px 0px 30px;
 }

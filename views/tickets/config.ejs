@@ -11,10 +11,12 @@
       <a href="./"><li><b>Home</b></li></a>
       <a href="./about"><li><b>About</b></li></a>
       <a href="./tickets"><li><b>Tickets</b></li></a>
-      <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
       <% if (email[0].is_agent == 1) { %>
-          <a href="./config"><li><b>Config</b></li></a>
-      <% } %>
+        <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+    <% } %>
+    <% if (email[0].role == 'admin') { %>
+        <a href="./config"><li><b>Config</b></li></a>
+    <% } %>
     </ul>
     <ul class="login-field">
         <li>
@@ -31,47 +33,69 @@
   <main>
     <h1>Config</h1>
 
-    <section>
-        <pre><%#= JSON.stringify(res, null, 4) %></pre>
+    <% if (email[0].role == 'admin') { %>
+      <section>
+          <pre><%#= JSON.stringify(res, null, 4) %></pre>
 
-        <table class="ticket-table">
-          <tr class="top-tr">
-              <th></th>
-              <th></th>
-          </tr>
-          <tr>
-              <th>User</th>
-              <th>Role</th>
-          </tr>
-          <% for (const row of res) { %>
-              <tr>
-                  <td><%= row.email %></td>
-                  <td>
-                    <form class="ticket-view-form" method="post" action="/config">
-                      <fieldset>
-                        <input style="display: none;" id="userinput" type="read" name="userinput" readonly value="<%= row.email %>">
-                        <% if (row.role == 'user') { %>
-                          <select name="role" id="role" class="input-larger">
-                            <option value="user" class="input-larger">user</option>
-                            <option value="agent" class="input-larger">agent</option>
-                          </select>
-                          <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
-                        <% } else if (row.role == 'agent') { %>
-                          <select name="role" id="role" class="input-larger">
-                            <option value="agent" class="input-larger">agent</option>
-                            <option value="user" class="input-larger">user</option>
-                          </select>
-                          <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
-                        <% } else if (row.role == 'admin') { %>
-                          <b>admin</b>
-                        <% } %>
-                      </fieldset>
-                    </form>
-                  </td>
-              </tr>
-          <% }; %>
-        </table>
-    </section>
+          <table class="ticket-table">
+            <tr class="top-tr">
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>User</th>
+                <th>Role</th>
+            </tr>
+            <% for (const row of res) { %>
+                <tr>
+                    <td><%= row.email %></td>
+                    <td>
+                      <form class="ticket-view-form" method="post" action="/config">
+                        <fieldset>
+                          <input style="display: none;" id="userinput" type="read" name="userinput" readonly value="<%= row.email %>">
+                          <% if (row.role == 'user') { %>
+                            <select name="role" id="role" class="input-larger">
+                              <option value="user" class="input-larger">user</option>
+                              <option value="agent" class="input-larger">agent</option>
+                            </select>
+                            <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
+                          <% } else if (row.role == 'agent') { %>
+                            <select name="role" id="role" class="input-larger">
+                              <option value="agent" class="input-larger">agent</option>
+                              <option value="user" class="input-larger">user</option>
+                            </select>
+                            <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
+                          <% } else if (row.role == 'admin') { %>
+                            <b>admin</b>
+                          <% } %>
+                        </fieldset>
+                      </form>
+                    </td>
+                </tr>
+            <% }; %>
+          </table>
+      </section>
+    <% } %>
+    <div class="hidden-api">
+      <button id="btn-call-api" disabled="true" onclick="callApi()">Call Api</button>
+
+      <!-- Add a container to hold the response from the call -->
+      <pre id="api-call-result"></pre>
+      <div class="hidden" id="gated-content">
+      <p>
+          You're seeing this content because you're currently
+          <strong>logged in</strong>.
+      </p>
+      <label>
+          Access token:
+          <pre id="ipt-access-token"></pre>
+      </label>
+      <label>
+          User profile:
+          <pre id="ipt-user-profile"></pre>
+      </label>
+      </div>
+  </div>
   </main>
   <footer><section>Your text here</section></footer>
 

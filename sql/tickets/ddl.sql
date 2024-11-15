@@ -180,12 +180,14 @@ BEGIN
       t.id,
       t.title,
       t.status,
-      CONCAT(SUBSTRING(t.description, 1, 30), "...") AS description,
+      t.description AS description,
       t.category_name AS category,
       DATE_FORMAT(t.skapad_datum, '%Y-%m-%d %H:%i:%s') AS skapad_datum,
       t.status,
       user_user.email AS user_email,
-      agent_user.email AS agent_email
+      agent_user.email AS agent_email,
+      t.file_data,
+      t.file_name
     FROM ticket t
     INNER JOIN user user_user ON user_user.id = t.user_id
     LEFT JOIN user agent_user ON agent_user.id = t.agent_id
@@ -207,7 +209,11 @@ BEGIN
       num = tc.ticket_id;
   ELSEIF to_get = 'users' THEN
     SELECT
-      *
+      id AS user_id,
+      name,
+      email,
+      is_agent,
+      role
     FROM
       user
     WHERE email = chr;
@@ -230,6 +236,41 @@ BEGIN
       *
     FROM
       user;
+  ELSEIF to_get = 'articles' THEN
+    SELECT
+      a.id,
+      a.title,
+      a.category_name,
+      DATE_FORMAT(a.created_date, '%Y-%m-%d %H:%i:%s') AS created_date,
+      CONCAT(SUBSTRING(a.content, 1, 30), "...") AS content,
+      u.email
+    FROM
+      article a
+    LEFT JOIN
+      user u ON u.id = a.user_id;
+  ELSEIF to_get = 'articles-one' THEN
+    SELECT
+      a.id,
+      a.title,
+      a.category_name,
+      DATE_FORMAT(a.created_date, '%Y-%m-%d %H:%i:%s') AS created_date,
+      a.content,
+      u.email
+    FROM
+      article a
+    LEFT JOIN
+      user u ON u.id = a.user_id
+    WHERE
+      a.id = num;
+  ELSEIF to_get = 'articles-category' THEN
+    SELECT
+      id,
+      title,
+      category_name
+    FROM
+      article
+    WHERE
+      category_name = chr;
   END IF;
 END
 ;;

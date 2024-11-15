@@ -11,8 +11,10 @@
             <a href="./"><li><b>Home</b></li></a>
             <a href="./about"><li><b>About</b></li></a>
             <a href="./tickets"><li><b>Tickets</b></li></a>
-            <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
             <% if (email[0].is_agent == 1) { %>
+                <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+            <% } %>
+            <% if (email[0].role == 'admin') { %>
                 <a href="./config"><li><b>Config</b></li></a>
             <% } %>
         </ul>
@@ -30,7 +32,9 @@
     </nav>
     <main>
         <h1>Tickets</h1>
-        <a href="./ticket-create" class="ticket-link"><div class="ticket-button">Create Ticket</div></a>
+        <% if (email[0].user_email != '') { %>
+            <a href="./ticket-create" class="ticket-link"><div class="ticket-button">Create Ticket</div></a>
+        <% } %>
         <% if (email[0].is_agent == 1) { %>
             <a href="./category-create" class="ticket-link"><div class="ticket-button">Create Category</div></a>
         <% } %>
@@ -98,7 +102,7 @@
             </div>
         </div>
     </main>
-    <form style="display:none;" method="post" action="/tickets" name="usernameform">
+    <form style="display: none;" method="post" action="/tickets" name="usernameform">
         <fieldset>
             <input id="userinput" type="read" name="userinput" readonly value="">
 

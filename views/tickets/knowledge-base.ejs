@@ -7,12 +7,14 @@
 </head>
 <body>
   <nav>
-    <ul class="page-field">
-      <a href="./"><li><b>Home</b></li></a>
-      <a href="./about"><li><b>About</b></li></a>
-      <a href="./tickets"><li><b>Tickets</b></li></a>
-      <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
-      <% if (email[0].is_agent == 1) { %>
+        <ul class="page-field">
+        <a href="./"><li><b>Home</b></li></a>
+        <a href="./about"><li><b>About</b></li></a>
+        <a href="./tickets"><li><b>Tickets</b></li></a>
+        <% if (email[0].is_agent == 1) { %>
+          <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+      <% } %>
+      <% if (email[0].role == 'admin') { %>
           <a href="./config"><li><b>Config</b></li></a>
       <% } %>
     </ul>
@@ -30,7 +32,58 @@
   </nav>
   <main>
     <h1>Articles</h1>
+    <a href="./article-create" class="ticket-link"><div class="ticket-button">Create Article</div></a>
+      <table class="ticket-table">
+          <tr class="top-tr">
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+          </tr>
+          <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Created</th>
+              <th>Content</th>
+              <th>Author</th>
+              <th>Details</th>
+          </tr>
+          <% for (const row of res) { %>
+              <% if (row.user_email == email[0].user_email || email[0].is_agent == 1) { %>
+                  <tr>
+                      <td><%= row.title %></td>
+                      <td><%= row.category_name %></td>
+                      <td><%= row.created_date %></td>
+                      <td><%= row.content %></td>
+                      <td><%= row.email %></td>
+                      <td><a href="./article-view/<%= row.id %>">Details</a></td>
+                  </tr>
+              <% } %>
+          <% }; %>
+      </table>
 
+    <div class="hidden-api">
+      <button id="btn-call-api" disabled="true" onclick="callApi()">Call Api</button>
+
+      <!-- Add a container to hold the response from the call -->
+      <pre id="api-call-result"></pre>
+      <div class="hidden" id="gated-content">
+      <p>
+          You're seeing this content because you're currently
+          <strong>logged in</strong>.
+      </p>
+      <label>
+          Access token:
+          <pre id="ipt-access-token"></pre>
+      </label>
+      <label>
+          User profile:
+          <pre id="ipt-user-profile"></pre>
+      </label>
+      </div>
+  </div>
   </main>
 
   <footer><section>Your text here</section></footer>

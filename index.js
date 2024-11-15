@@ -12,11 +12,6 @@ const middleware = require("./middleware/index.js");
 const { auth } = require("express-oauth2-jwt-bearer");
 const authConfig = require("./auth_config.json");
 
-const checkJwt = auth({
-    audience: authConfig.audience,
-    issuerBaseURL: `https://${authConfig.domain}`
-});
-
 app.set("view engine", "ejs");
 
 app.use(middleware.logIncomingToConsole);
@@ -25,14 +20,8 @@ app.use("/", routeIndex);
 
 app.listen(port, logStartUpDetailsToConsole);
 
-app.get("/api/external", checkJwt, (req, res) => {
-    res.send({
-        msg: "Your access token was successfully validated!"
-    });
-});
-
 app.get('/auth_config.json', (req, res) => {
-    res.sendFile(path.join(__dirname, 'config', 'auth_config.json'));
+    res.sendFile(path.join(__dirname, 'auth_config.json'));
 });
 
 app.use(function(err, req, res, next) {

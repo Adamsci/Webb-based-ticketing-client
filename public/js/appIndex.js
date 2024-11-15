@@ -116,11 +116,6 @@ const updateUI = async () => {
 
 const needsPost = async () => {
     console.info("needsPost")
-    if (localStorage.getItem("logindex") == "yes") {
-      console.info("logindex");
-      localStorage.setItem("logindex", "no");
-      return true;
-    }
     if (localStorage.getItem("needsReload") == null) {
     localStorage.setItem("needsReload", "yes");
     }
@@ -163,6 +158,7 @@ const login = async () => {
             redirect_uri: "http://localhost:3000"
         }
     });
+    localStorage.setItem("logindex", "yes");
 };
 
 const logout = () => {

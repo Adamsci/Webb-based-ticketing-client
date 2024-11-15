@@ -11,9 +11,11 @@
             <a href="../"><li><b>Home</b></li></a>
             <a href="../about"><li><b>About</b></li></a>
             <a href="../tickets"><li><b>Tickets</b></li></a>
-            <a href="../knowledge-base"><li><b>Knowledge Base</b></li></a>
             <% if (email[0].is_agent == 1) { %>
-                <a href="../config"><li><b>Config</b></li></a>
+                <a href="./knowledge-base"><li><b>Knowledge Base</b></li></a>
+            <% } %>
+            <% if (email[0].role == 'admin') { %>
+                <a href="./config"><li><b>Config</b></li></a>
             <% } %>
         </ul>
         <ul class="login-field">
@@ -33,80 +35,86 @@
             <h1>Ticket <%= row.id %></h1>
             <section>
                 <pre><%#= JSON.stringify(res, null, 4) %></pre>
-                <form class="ticket-view-form" method="post" action="/ticket-view/<%= row.id %>">
-                    <fieldset>
-                        <table class="ticket-table-one">
-                            <tr>
-                                <th>User</th>
-                                <td><%= row.user_email %></td>
-                            </tr>
-                            <tr class="top-tr">
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <th>Title</th>
-                                <td><%= row.title %></td>
-                            </tr>
-                            <tr>
-                                <th>Category</th>
-                                <td><%= row.category %></td>
-                            </tr>
-                            <tr>
-                                <th>Created</th>
-                                <td><%= row.skapad_datum %></td>
-                            </tr>
-                            <tr>
-                                <th>Agent</th>
-                                <td>
-                                    <form class="ticket-view-form" method="post" action="/ticket-view/<%= row.id %>">
-                                        <%= row.agent_email %>
-                                        <% if (row.agent_email == null && session[0].is_agent == 1) { %>
-                                            <input style="display: none;" id="userinput" type="read" name="userinput" readonly value="">
-                                            <input type="submit" name="doit" value="Claim Ticket" class="input-larger">
-                                        <% } %>
-                                        <% if (row.agent_email != null && (session[0].role == 'admin') || session[0].user_email == row.agent_email) { %>
-                                            <input type="submit" name="reit" value="Remove Claim" class="input-larger">
-                                        <% } %>
-                                    </form>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Description</th>
-                                <td><%= row.description %></td>
-                            </tr>
-                            <tr>
-                                <th>File</th>
-                                <td>
-                                    <% if (row.file_data) { %>
-                                        <a href="/download/<%= row.id %>"><%= row.file_name %>.<%= row.file_extension %></a>
-                                    <% } else { %>
-                                        No File Attached
+                    <table class="ticket-table-one">
+                        <tr>
+                            <th>User</th>
+                            <td><%= row.user_email %></td>
+                        </tr>
+                        <tr class="top-tr">
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>Title</th>
+                            <td><%= row.title %></td>
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            <td><%= row.category %></td>
+                        </tr>
+                        <tr>
+                            <th>Created</th>
+                            <td><%= row.skapad_datum %></td>
+                        </tr>
+                        <tr>
+                            <th>Agent</th>
+                            <td>
+                                <form class="ticket-view-form" method="post" action="/ticket-view/<%= row.id %>/claim">
+                                    <%= row.agent_email %>
+                                    <% if (row.agent_email == null && session[0].is_agent == 1) { %>
+                                        <input style="display: none;" id="agentinput" type="read" name="agentinput" readonly value="">
+                                        <input type="submit" name="doit" value="Claim Ticket" class="input-larger">
                                     <% } %>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Status</th>
-                                <% if (row.status == 'Open') { %>
-                                    <td class="open-button">
-                                        <select name="s_status" id="s_status" name="s_status" class="input-larger">
-                                            <option value="<%= row.status %>" class="input-larger"><%= row.status %></option>
-                                            <option value="Closed" class="input-larger">Closed</option>
-                                        </select>
-                                    </td>
-                                <% } else if (row.status == 'Closed') { %>
-                                    <td class="closed-button">
-                                        <select name="s_status" id="s_status" name="s_status" class="input-larger">
-                                            <option value="<%= row.status %>" class="input-larger"><%= row.status %></option>
-                                            <option value="Open" class="input-larger">Open</option>
-                                        </select>
-                                    </td>
+                                    <% if (row.agent_email != null && (session[0].role == 'admin') || session[0].user_email == row.agent_email) { %>
+                                        <input type="submit" name="reit" value="Remove Claim" class="input-larger">
+                                    <% } %>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td><%= row.description %></td>
+                        </tr>
+                        <tr>
+                            <th>File</th>
+                            <td>
+                                <% if (row.file_data) { %>
+                                    <a href="/download/<%= row.id %>"><%= row.file_name %>.<%= row.file_extension %></a>
+                                <% } else { %>
+                                    No File Attached
                                 <% } %>
-                            </tr>
-                        </table>
-                        <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
-                    </fieldset>
+                            </td>
+                        </tr>
+                        <form class="ticket-view-form" method="post" action="/ticket-view/<%= row.id %>">
+                        <tr>
+                            <th>Status</th>
+                            <% if (row.status == 'Open') { %>
+                                <td class="open-button">
+                                    <select name="s_status" id="s_status" name="s_status" class="input-larger">
+                                        <option value="<%= row.status %>" class="input-larger"><%= row.status %></option>
+                                        <option value="Closed" class="input-larger">Closed</option>
+                                    </select>
+                                </td>
+                            <% } else if (row.status == 'Closed') { %>
+                                <td class="closed-button">
+                                    <select name="s_status" id="s_status" name="s_status" class="input-larger">
+                                        <option value="<%= row.status %>" class="input-larger"><%= row.status %></option>
+                                        <option value="Open" class="input-larger">Open</option>
+                                    </select>
+                                </td>
+                            <% } %>
+                        </tr>
+                    </table>
+                    <input type="submit" name="doit" value="Confirm changes" class="confirm-ticket-change">
                 </form>
+            </section>
+            <section>
+                <% if (email[0].is_agent == 1) { %>
+                    <h2>Related articles</h2>
+                    <% for (const row of related) { %>
+                        <pre><a href="../article-view/<%= row.id %>"><%= row.title %></a></pre>
+                    <% }; %>
+                <% } %>
             </section>
             <section>
                 <form class="label-left" method="post" action="/ticket-view/<%= row.id %>">
@@ -134,6 +142,7 @@
                 </table>
             </section>
         <% }; %>
+
         <div class="hidden-api">
             <button id="btn-call-api" disabled="true" onclick="callApi()">Call Api</button>
 
